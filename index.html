@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AkAog Stream Overlay</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        /* Main Channel Banner */
+        .channel-banner {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            border: 3px solid #ff4500;
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            transform: translateX(-200%);
+            animation: slideIn 1s forwards 0.5s;
+            box-shadow: 0 0 15px #ff4500;
+            z-index: 100;
+        }
+        
+        @keyframes slideIn {
+            100% { transform: translateX(0); }
+        }
+        
+        .channel-name {
+            font-size: 28px;
+            color: #ff4500;
+            text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            margin: 0;
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff4500, 0 0 20px #ff4500; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff4500, 0 0 40px #ff4500; }
+        }
+        
+        .channel-game {
+            font-size: 14px;
+            margin: 5px 0 0;
+            color: #00ffff;
+        }
+        
+        /* Alert Box */
+        .alert-box {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 300px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            color: white;
+            display: none;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px #00ff00; }
+            50% { box-shadow: 0 0 20px #00ff00; }
+            100% { box-shadow: 0 0 5px #00ff00; }
+        }
+        
+        .alert-title {
+            color: #00ff00;
+            font-size: 18px;
+            margin: 0 0 10px;
+        }
+        
+        .alert-message {
+            font-size: 16px;
+        }
+        
+        /* Social Media Links */
+        .social-links {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.2);
+            border-color: #ff4500;
+        }
+        
+        /* PUBG Kill Counter */
+        .kill-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #ff0000;
+            border-radius: 5px;
+            padding: 10px;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .kill-count {
+            color: #ff0000;
+            font-size: 24px;
+        }
+        
+        /* Animated PUBG Helmet */
+        .pubg-helmet {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-image: url('https://i.ibb.co/0jQ7Z0x/pubg-helmet.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Channel Banner -->
+    <div class="channel-banner">
+        <h1 class="channel-name">AkAog</h1>
+        <p class="channel-game">PUBG Mobile Streamer</p>
+    </div>
+    
+    <!-- Alert Box -->
+    <div class="alert-box" id="alertBox">
+        <h3 class="alert-title">NEW SUBSCRIBER!</h3>
+        <p class="alert-message">Username just subscribed!</p>
+    </div>
+    
+    <!-- Social Media Links -->
+    <div class="social-links">
+        <a href="#" class="social-icon">YT</a>
+        <a href="#" class="social-icon">IG</a>
+        <a href="#" class="social-icon">FB</a>
+        <a href="#" class="social-icon">DC</a>
+    </div>
+    
+    <!-- Kill Counter -->
+    <div class="kill-counter">
+        KILLS: <span class="kill-count">0</span>
+    </div>
+    
+    <!-- PUBG Helmet Animation -->
+    <div class="pubg-helmet"></div>
+    
+    <script>
+        // Function to show alerts (call this when you get new subs/follows)
+        function showAlert(type, username) {
+            const alertBox = document.getElementById('alertBox');
+            const title = alertBox.querySelector('.alert-title');
+            const message = alertBox.querySelector('.alert-message');
+            
+            if(type === 'sub') {
+                title.textContent = 'NEW SUBSCRIBER!';
+                message.textContent = `${username} just subscribed!`;
+                alertBox.style.borderColor = '#00ff00';
+                title.style.color = '#00ff00';
+            } else if(type === 'donation') {
+                title.textContent = 'NEW DONATION!';
+                message.textContent = `${username} just donated!`;
+                alertBox.style.borderColor = '#ffd700';
+                title.style.color = '#ffd700';
+            }
+            
+            alertBox.style.display = 'block';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Update kill counter
+        let kills = 0;
+        function updateKills() {
+            document.querySelector('.kill-count').textContent = kills;
+            kills++;
+            // In a real stream, you would call this when you get a kill
+        }
+        
+        // Demo - remove in production
+        setTimeout(() => showAlert('sub', 'ProPlayer123'), 3000);
+        setInterval(updateKills, 10000);
+    </script>
+</body>
+</html>
